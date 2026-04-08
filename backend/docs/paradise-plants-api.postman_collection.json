@@ -1,0 +1,349 @@
+{
+  "info": {
+    "_postman_id": "paradise-plants-api",
+    "name": "Paradise Plants API",
+    "description": "Complete API collection for Paradise Plants microservices",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "🌿 Catalog Service",
+      "item": [
+        {
+          "name": "Get All Plants",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CATALOG_URL}}/api/plants",
+              "host": ["{{CATALOG_URL}}"],
+              "path": ["api", "plants"]
+            }
+          }
+        },
+        {
+          "name": "Get Plant by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CATALOG_URL}}/api/plants/1",
+              "host": ["{{CATALOG_URL}}"],
+              "path": ["api", "plants", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Plants by Category",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CATALOG_URL}}/api/plants/category/Tropical",
+              "host": ["{{CATALOG_URL}}"],
+              "path": ["api", "plants", "category", "Tropical"]
+            }
+          }
+        },
+        {
+          "name": "Create Plant",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Plant\",\n  \"scientific_name\": \"Plant scientificus\",\n  \"description\": \"A beautiful new plant\",\n  \"price\": 29.99,\n  \"category\": \"Tropical\",\n  \"light_requirements\": \"Bright Indirect\",\n  \"water_frequency\": \"Weekly\",\n  \"humidity_level\": \"High\",\n  \"image_url\": \"https://example.com/image.jpg\"\n}\n"
+            },
+            "url": {
+              "raw": "{{CATALOG_URL}}/api/plants",
+              "host": ["{{CATALOG_URL}}"],
+              "path": ["api", "plants"]
+            }
+          }
+        },
+        {
+          "name": "Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CATALOG_URL}}/health",
+              "host": ["{{CATALOG_URL}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📦 Inventory Service",
+      "item": [
+        {
+          "name": "Get All Inventory",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{INVENTORY_URL}}/api/inventory",
+              "host": ["{{INVENTORY_URL}}"],
+              "path": ["api", "inventory"]
+            }
+          }
+        },
+        {
+          "name": "Get Inventory by Plant ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{INVENTORY_URL}}/api/inventory/1",
+              "host": ["{{INVENTORY_URL}}"],
+              "path": ["api", "inventory", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Low Stock Items",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{INVENTORY_URL}}/api/inventory/low-stock",
+              "host": ["{{INVENTORY_URL}}"],
+              "path": ["api", "inventory", "low-stock"]
+            }
+          }
+        },
+        {
+          "name": "Update Inventory Quantity",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"quantity_in_stock\": 50\n}\n"
+            },
+            "url": {
+              "raw": "{{INVENTORY_URL}}/api/inventory/1",
+              "host": ["{{INVENTORY_URL}}"],
+              "path": ["api", "inventory", "1"]
+            }
+          }
+        },
+        {
+          "name": "Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{INVENTORY_URL}}/health",
+              "host": ["{{INVENTORY_URL}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Orders Service",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{ORDERS_URL}}/api/orders",
+              "host": ["{{ORDERS_URL}}"],
+              "path": ["api", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{ORDERS_URL}}/api/orders/1",
+              "host": ["{{ORDERS_URL}}"],
+              "path": ["api", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customer_name\": \"John Doe\",\n  \"customer_email\": \"john@example.com\",\n  \"customer_phone\": \"555-0101\",\n  \"shipping_address\": \"123 Main St, City, State 12345\",\n  \"items\": [\n    {\n      \"plant_id\": 1,\n      \"quantity\": 2,\n      \"unit_price\": 45.99\n    },\n    {\n      \"plant_id\": 3,\n      \"quantity\": 1,\n      \"unit_price\": 19.99\n    }\n  ]\n}\n"
+            },
+            "url": {
+              "raw": "{{ORDERS_URL}}/api/orders",
+              "host": ["{{ORDERS_URL}}"],
+              "path": ["api", "orders"]
+            }
+          }
+        },
+        {
+          "name": "Update Order Status",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"shipped\"\n}\n"
+            },
+            "url": {
+              "raw": "{{ORDERS_URL}}/api/orders/1/status",
+              "host": ["{{ORDERS_URL}}"],
+              "path": ["api", "orders", "1", "status"]
+            }
+          }
+        },
+        {
+          "name": "Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{ORDERS_URL}}/health",
+              "host": ["{{ORDERS_URL}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🌱 Care Reminders Service",
+      "item": [
+        {
+          "name": "Get All Reminders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CARE_REMINDERS_URL}}/api/care-reminders",
+              "host": ["{{CARE_REMINDERS_URL}}"],
+              "path": ["api", "care-reminders"]
+            }
+          }
+        },
+        {
+          "name": "Get Plant Reminders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CARE_REMINDERS_URL}}/api/care-reminders/plant/1",
+              "host": ["{{CARE_REMINDERS_URL}}"],
+              "path": ["api", "care-reminders", "plant", "1"]
+            }
+          }
+        },
+        {
+          "name": "Get Upcoming Reminders (7 days)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CARE_REMINDERS_URL}}/api/care-reminders/upcoming",
+              "host": ["{{CARE_REMINDERS_URL}}"],
+              "path": ["api", "care-reminders", "upcoming"]
+            }
+          }
+        },
+        {
+          "name": "Create Reminder",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"plant_id\": 1,\n  \"reminder_type\": \"watering\",\n  \"frequency\": \"Weekly\",\n  \"next_due_date\": \"2026-04-15\",\n  \"description\": \"Water when top inch of soil is dry\"\n}\n"
+            },
+            "url": {
+              "raw": "{{CARE_REMINDERS_URL}}/api/care-reminders",
+              "host": ["{{CARE_REMINDERS_URL}}"],
+              "path": ["api", "care-reminders"]
+            }
+          }
+        },
+        {
+          "name": "Mark Reminder as Completed",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{CARE_REMINDERS_URL}}/api/care-reminders/1/complete",
+              "host": ["{{CARE_REMINDERS_URL}}"],
+              "path": ["api", "care-reminders", "1", "complete"]
+            }
+          }
+        },
+        {
+          "name": "Service Health",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{CARE_REMINDERS_URL}}/health",
+              "host": ["{{CARE_REMINDERS_URL}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "CATALOG_URL",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "INVENTORY_URL",
+      "value": "http://localhost:3002",
+      "type": "string"
+    },
+    {
+      "key": "ORDERS_URL",
+      "value": "http://localhost:3003",
+      "type": "string"
+    },
+    {
+      "key": "CARE_REMINDERS_URL",
+      "value": "http://localhost:3004",
+      "type": "string"
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+version: '3.8'
+
+services:
+  mysql-db:
+    image: mysql:8.0
+    container_name: paradise-plants-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: paradise123
+      MYSQL_DATABASE: paradise_plants
+      MYSQL_USER: paradise_user
+      MYSQL_PASSWORD: paradise123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./shared/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./shared/database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    networks:
+      - paradise-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  catalog-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+    container_name: paradise-catalog-service
+    environment:
+      DB_HOST: mysql-db
+      DB_PORT: 3306
+      DB_USER: paradise_user
+      DB_PASSWORD: paradise123
+      DB_NAME: paradise_plants
+      CATALOG_PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - paradise-network
+    command: sh -c "node --watch /app/services/catalog-service/index.js"
+
+  inventory-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+    container_name: paradise-inventory-service
+    environment:
+      DB_HOST: mysql-db
+      DB_PORT: 3306
+      DB_USER: paradise_user
+      DB_PASSWORD: paradise123
+      DB_NAME: paradise_plants
+      INVENTORY_PORT: 3002
+    ports:
+      - "3002:3002"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - paradise-network
+    command: sh -c "node --watch /app/services/inventory-service/index.js"
+
+  orders-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+    container_name: paradise-orders-service
+    environment:
+      DB_HOST: mysql-db
+      DB_PORT: 3306
+      DB_USER: paradise_user
+      DB_PASSWORD: paradise123
+      DB_NAME: paradise_plants
+      ORDERS_PORT: 3003
+    ports:
+      - "3003:3003"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - paradise-network
+    command: sh -c "node --watch /app/services/orders-service/index.js"
+
+  care-reminders-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.service
+    container_name: paradise-care-reminders-service
+    environment:
+      DB_HOST: mysql-db
+      DB_PORT: 3306
+      DB_USER: paradise_user
+      DB_PASSWORD: paradise123
+      DB_NAME: paradise_plants
+      CARE_REMINDERS_PORT: 3004
+    ports:
+      - "3004:3004"
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    networks:
+      - paradise-network
+    command: sh -c "node --watch /app/services/care-reminders-service/index.js"
+
+volumes:
+  mysql_data:
+
+networks:
+  paradise-network:
+    driver: bridge

@@ -1,18 +1,44 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Search } from 'lucide-react';
-import { plants } from '@/data/mock';
 import PlantCard from '@/components/PlantCard';
 import { motion } from 'framer-motion';
+import { useCatalog } from '@/api/hooks/useApi';
+
+const CATEGORIES = ['All', 'Tropical', 'Indoor', 'Succulent', 'Flowering'];
 
 export default function Catalog() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<string>('All');
+  const { plants, loading, error, fetchAllPlants, fetchPlantsByCategory } = useCatalog();
+
+  useEffect(() => {
+    if (filter === 'All') {
+      fetchAllPlants();
+    } else {
+      fetchPlantsByCategory(filter);
+    }
+  }, [filter, fetchAllPlants, fetchPlantsByCategory]);
 
   const filtered = plants.filter(p => {
-    const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.species.toLowerCase().includes(search.toLowerCase());
-    const matchFilter = filter === 'All' || p.careLevel === filter;
-    return matchSearch && matchFilter;
+    const matchSearch = 
+      p.name.toLowerCase().includes(search.toLowerCase()) || 
+      (p.scientific_name && p.scientific_name.toLowerCase().includes(search.toLowerCase()));
+    return matchSearch;
   });
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div>
+          <h1 className="font-display text-2xl font-bold text-foreground">Plant Catalog</h1>
+          <p className="text-sm text-muted-foreground">Browse and manage your plant inventory</p>
+        </div>
+        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+          ⚠️ Error loading plants: {error}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -33,31 +59,49 @@ export default function Catalog() {
           />
         </div>
         <div className="flex gap-2">
-          {['All', 'Easy', 'Medium', 'Expert'].map(level => (
+          {CATEGORIES.map(category => (
             <button
-              key={level}
-              onClick={() => setFilter(level)}
+              key={category}
+              onClick={() => setFilter(category)}
               className={`rounded-full px-4 py-1.5 text-xs font-medium transition ${
-                filter === level
+                filter === category
                   ? 'bg-primary text-primary-foreground'
                   : 'bg-muted text-muted-foreground hover:bg-muted/80'
               }`}
             >
-              {level}
+              {category}
             </button>
           ))}
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {filtered.map((plant, i) => (
-          <PlantCard key={plant.id} plant={plant} index={i} />
-        ))}
-      </div>
-      {filtered.length === 0 && (
-        <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-12 text-center text-muted-foreground">
-          No plants match your search.
-        </motion.p>
+      {loading ? (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="rounded-xl border border-border bg-card p-4 animate-pulse">
+              <div className="h-40 bg-muted rounded-lg mb-3" />
+              <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+              <div className="h-3 bg-muted rounded w-1/2" />
+            </div>
+          ))}
+        </div>
+      ) : filtered.length === 0 ? (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No plants found matching your search.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((plant, i) => (
+            <motion.div
+              key={plant.id}
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.05 }}
+            >
+              <PlantCard plant={plant} />
+            </motion.div>
+          ))}
+        </div>
       )}
     </div>
   );
