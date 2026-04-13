@@ -1,4 +1,4 @@
-# 🌿 Paradise Plants - Plant E-Commerce Platform
+# 🌿 Plants of Paradise - Plant E-Commerce Platform
 
 A modern, full-stack microservices-based e-commerce platform for managing and selling plants. Built with React, Node.js, MySQL, and Docker.
 
