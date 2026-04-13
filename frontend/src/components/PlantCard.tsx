@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Plant } from '@/data/mock';
 import { Droplets, Sun, ShoppingCart } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useState } from 'react';
 
 const careLevelColor = {
   Easy: 'bg-primary/15 text-primary',
@@ -9,7 +10,26 @@ const careLevelColor = {
   Expert: 'bg-terracotta/15 text-terracotta',
 };
 
+const plantImages: Record<string, string> = {
+  'Monstera Deliciosa': '/images/monstera.svg',
+  'Pothos (Devil\'s Ivy)': '/images/pothos.svg',
+  'Snake Plant': '/images/snake-plant.svg',
+  'Fiddle Leaf Fig': '/images/fiddle-leaf.svg',
+  'ZZ Plant': '/images/zz-plant.svg',
+  'Philodendron Heart Leaf': '/images/philodendron.svg',
+  'Rubber Plant': '/images/rubber-plant.svg',
+  'Spider Plant': '/images/spider-plant.svg',
+  'Alocasia': '/images/alocasia.svg',
+  'Orchid': '/images/orchid.svg',
+};
+
 export default function PlantCard({ plant, index }: { plant: Plant; index: number }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  
+  // Try to use local image first, fallback to plant data image
+  const imageSource = plantImages[plant.name] || plant.image || '/placeholder.svg';
+  const displayImage = imageFailed && plant.image !== imageSource ? plant.image : imageSource;
+  
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -17,11 +37,12 @@ export default function PlantCard({ plant, index }: { plant: Plant; index: numbe
       transition={{ delay: index * 0.06, duration: 0.4 }}
       className="group overflow-hidden rounded-xl border border-border bg-card shadow-card transition-shadow hover:shadow-elevated"
     >
-      <div className="relative h-52 overflow-hidden">
+      <div className="relative h-52 overflow-hidden bg-muted">
         <img
-          src={plant.image}
+          src={displayImage}
           alt={plant.name}
           loading="lazy"
+          onError={() => setImageFailed(true)}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div className="absolute top-3 left-3">

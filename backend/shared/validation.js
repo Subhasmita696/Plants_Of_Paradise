@@ -101,7 +101,7 @@ const isValidEmail = (email) => {
   return emailRegex.test(email);
 };
 
-module.exports = {
+export {
   validatePlantInput,
   validateInventoryInput,
   validateOrderInput,

@@ -84,10 +84,10 @@ export default function Orders() {
                   <td className="px-5 py-4 text-foreground">{order.customer_name}</td>
                   <td className="px-5 py-4 text-muted-foreground text-xs">{order.customer_email}</td>
                   <td className="px-5 py-4 text-muted-foreground text-xs">
-                    {order.total_amount ? `$${order.total_amount.toFixed(2)}` : 'N/A'}
+                    {order.total_amount ? `$${parseFloat(order.total_amount).toFixed(2)}` : 'N/A'}
                   </td>
                   <td className="px-5 py-4 text-right font-semibold text-foreground">
-                    ${order.total_amount?.toFixed(2) || '0.00'}
+                    ${parseFloat(order.total_amount || '0').toFixed(2)}
                   </td>
                   <td className="px-5 py-4 text-center">
                     <span className={`inline-block rounded-full px-3 py-1 text-xs font-medium capitalize ${statusColors[order.status] || statusColors.pending}`}>
@@ -110,7 +110,7 @@ export default function Orders() {
           <div className="rounded-lg border border-border bg-card p-4">
             <p className="text-xs text-muted-foreground mb-1">Revenue</p>
             <p className="text-2xl font-bold text-foreground">
-              ${orders.reduce((sum, o) => sum + (o.total_amount || 0), 0).toFixed(2)}
+              ${orders.reduce((sum, o) => sum + (parseFloat(o.total_amount) || 0), 0).toFixed(2)}
             </p>
           </div>
           <div className="rounded-lg border border-border bg-card p-4">

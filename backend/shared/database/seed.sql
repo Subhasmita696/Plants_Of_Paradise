@@ -2,16 +2,16 @@ USE paradise_plants;
 
 -- Insert Plant Data
 INSERT INTO plants (name, scientific_name, description, price, category, light_requirements, water_frequency, humidity_level, image_url) VALUES
-('Monstera Deliciosa', 'Monstera deliciosa', 'Large tropical plant with stunning holes in leaves', 45.99, 'Tropical', 'Bright Indirect', 'Weekly', 'High', 'https://images.unsplash.com/photo-1610186673557-55827760d54d?w=400'),
-('Pothos (Devil''s Ivy)', 'Epipremnum aureum', 'Trailing vine with heart-shaped leaves', 12.99, 'Indoor', 'Low to Bright', 'Every 2 weeks', 'Medium', 'https://images.unsplash.com/photo-1612771848375-e6490216da8d?w=400'),
-('Snake Plant', 'Sansevieria trifasciata', 'Low maintenance succulent with striking vertical leaves', 19.99, 'Succulent', 'Low to Bright', 'Monthly', 'Low', 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400'),
-('Fiddle Leaf Fig', 'Ficus lyrata', 'Statement plant with large, violin-shaped leaves', 55.00, 'Tropical', 'Bright Indirect', 'Weekly', 'Medium', 'https://images.unsplash.com/photo-1522701518895-da034126cb12?w=400'),
-('ZZ Plant', 'Zamioculcas zamiifolia', 'Extremely low maintenance plant with glossy leaflets', 24.99, 'Indoor', 'Low to Medium', 'Every 3 weeks', 'Low', 'https://images.unsplash.com/photo-1612207188884-33c348dd9cb4?w=400'),
-('Philodendron Heart Leaf', 'Philodendron hederaceum', 'Heart-shaped leaves, trailing or climbing growth', 14.99, 'Indoor', 'Low to Bright', 'Every 1-2 weeks', 'Medium', 'https://images.unsplash.com/photo-1613818202407-64ee90588892?w=400'),
-('Rubber Plant', 'Ficus elastica', 'Majestic plant with thick, dark green leaves', 35.50, 'Tropical', 'Bright Indirect', 'Weekly', 'Medium', 'https://images.unsplash.com/photo-1465056836643-15cea6ccd14d?w=400'),
-('Spider Plant', 'Chlorophytum comosum', 'Variegated leaves with dangling plantlets', 16.99, 'Indoor', 'Medium to Bright', 'Every 1-2 weeks', 'Medium', 'https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=400'),
-('Alocasia', 'Alocasia amazonica', 'Striking plant with arrow-shaped leaves and distinctive veining', 32.99, 'Tropical', 'Bright Indirect', 'Weekly', 'High', 'https://images.unsplash.com/photo-1612207736597-de2d4265fba3?w=400'),
-('Orchid', 'Orchidaceae', 'Exotic flowering plant in various colors', 29.99, 'Flowering', 'Bright Indirect', 'Weekly', 'High', 'https://images.unsplash.com/photo-1585124916852-22fdf4b60814?w=400');
+('Monstera Deliciosa', 'Monstera deliciosa', 'Large tropical plant with stunning holes in leaves', 45.99, 'Tropical', 'Bright Indirect', 'Weekly', 'High', '/images/monstera.svg'),
+('Pothos (Devil''s Ivy)', 'Epipremnum aureum', 'Trailing vine with heart-shaped leaves', 12.99, 'Indoor', 'Low to Bright', 'Every 2 weeks', 'Medium', '/images/pothos.svg'),
+('Snake Plant', 'Sansevieria trifasciata', 'Low maintenance succulent with striking vertical leaves', 19.99, 'Succulent', 'Low to Bright', 'Monthly', 'Low', '/images/snake-plant.svg'),
+('Fiddle Leaf Fig', 'Ficus lyrata', 'Statement plant with large, violin-shaped leaves', 55.00, 'Tropical', 'Bright Indirect', 'Weekly', 'Medium', '/images/fiddle-leaf.svg'),
+('ZZ Plant', 'Zamioculcas zamiifolia', 'Extremely low maintenance plant with glossy leaflets', 24.99, 'Indoor', 'Low to Medium', 'Every 3 weeks', 'Low', '/images/zz-plant.svg'),
+('Philodendron Heart Leaf', 'Philodendron hederaceum', 'Heart-shaped leaves, trailing or climbing growth', 14.99, 'Indoor', 'Low to Bright', 'Every 1-2 weeks', 'Medium', '/images/philodendron.svg'),
+('Rubber Plant', 'Ficus elastica', 'Majestic plant with thick, dark green leaves', 35.50, 'Tropical', 'Bright Indirect', 'Weekly', 'Medium', '/images/rubber-plant.svg'),
+('Spider Plant', 'Chlorophytum comosum', 'Variegated leaves with dangling plantlets', 16.99, 'Indoor', 'Medium to Bright', 'Every 1-2 weeks', 'Medium', '/images/spider-plant.svg'),
+('Alocasia', 'Alocasia amazonica', 'Striking plant with arrow-shaped leaves and distinctive veining', 32.99, 'Tropical', 'Bright Indirect', 'Weekly', 'High', '/images/alocasia.svg'),
+('Orchid', 'Orchidaceae', 'Exotic flowering plant in various colors', 29.99, 'Flowering', 'Bright Indirect', 'Weekly', 'High', '/images/orchid.svg');
 
 -- Insert Inventory Data
 INSERT INTO inventory (plant_id, quantity_in_stock, reorder_level, supplier, storage_location) VALUES

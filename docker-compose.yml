@@ -1,9 +1,8 @@
-version: '3.8'
-
 services:
-  mysql-db:
+  # MySQL Database
+  mysql:
     image: mysql:8.0
-    container_name: paradise-plants-mysql
+    container_name: paradise-mysql
     environment:
       MYSQL_ROOT_PASSWORD: paradise123
       MYSQL_DATABASE: paradise_plants
@@ -13,101 +12,103 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./shared/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
-      - ./shared/database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+      - ./backend/shared/database/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./backend/shared/database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
     networks:
       - paradise-network
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uparadise_user", "-pparadise123"]
       timeout: 20s
       retries: 10
+      interval: 10s
+    restart: unless-stopped
 
-  catalog-service:
+  # Backend Services (All in one container)
+  backend:
     build:
-      context: .
-      dockerfile: Dockerfile.service
-    container_name: paradise-catalog-service
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: paradise-backend
+    depends_on:
+      mysql:
+        condition: service_healthy
     environment:
-      DB_HOST: mysql-db
+      NODE_ENV: development
+      DB_HOST: mysql
       DB_PORT: 3306
       DB_USER: paradise_user
       DB_PASSWORD: paradise123
       DB_NAME: paradise_plants
+      PORT: 3001
       CATALOG_PORT: 3001
+      INVENTORY_PORT: 3002
+      ORDERS_PORT: 3003
+      REMINDERS_PORT: 3004
     ports:
       - "3001:3001"
-    depends_on:
-      mysql-db:
-        condition: service_healthy
-    networks:
-      - paradise-network
-    command: sh -c "node --watch /app/services/catalog-service/index.js"
-
-  inventory-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.service
-    container_name: paradise-inventory-service
-    environment:
-      DB_HOST: mysql-db
-      DB_PORT: 3306
-      DB_USER: paradise_user
-      DB_PASSWORD: paradise123
-      DB_NAME: paradise_plants
-      INVENTORY_PORT: 3002
-    ports:
       - "3002:3002"
-    depends_on:
-      mysql-db:
-        condition: service_healthy
-    networks:
-      - paradise-network
-    command: sh -c "node --watch /app/services/inventory-service/index.js"
-
-  orders-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.service
-    container_name: paradise-orders-service
-    environment:
-      DB_HOST: mysql-db
-      DB_PORT: 3306
-      DB_USER: paradise_user
-      DB_PASSWORD: paradise123
-      DB_NAME: paradise_plants
-      ORDERS_PORT: 3003
-    ports:
       - "3003:3003"
-    depends_on:
-      mysql-db:
-        condition: service_healthy
-    networks:
-      - paradise-network
-    command: sh -c "node --watch /app/services/orders-service/index.js"
-
-  care-reminders-service:
-    build:
-      context: .
-      dockerfile: Dockerfile.service
-    container_name: paradise-care-reminders-service
-    environment:
-      DB_HOST: mysql-db
-      DB_PORT: 3306
-      DB_USER: paradise_user
-      DB_PASSWORD: paradise123
-      DB_NAME: paradise_plants
-      CARE_REMINDERS_PORT: 3004
-    ports:
       - "3004:3004"
-    depends_on:
-      mysql-db:
-        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     networks:
       - paradise-network
-    command: sh -c "node --watch /app/services/care-reminders-service/index.js"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3001/health"]
+      timeout: 10s
+      retries: 3
+      interval: 30s
+
+  # Frontend Application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: paradise-frontend
+    depends_on:
+      - backend
+    ports:
+      - "5173:80"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_API_URL: http://localhost:3001
+      VITE_CATALOG_API: http://localhost:3001
+      VITE_INVENTORY_API: http://localhost:3002
+      VITE_ORDERS_API: http://localhost:3003
+      VITE_REMINDERS_API: http://localhost:3004
+    networks:
+      - paradise-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      timeout: 10s
+      retries: 3
+      interval: 30s
+
+  # PhpMyAdmin for Database Management (Optional)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: paradise-phpmyadmin
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: paradise_user
+      PMA_PASSWORD: paradise123
+      PMA_ROOT_PASSWORD: paradise123
+    ports:
+      - "8080:80"
+    networks:
+      - paradise-network
+    restart: unless-stopped
 
 volumes:
   mysql_data:
+    driver: local
 
 networks:
   paradise-network:

@@ -1,0 +1,43 @@
+<svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="orchidStleaves" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a7c3e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2d5a1f;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="#f0ede5"/>
+  <!-- Pot -->
+  <path d="M 155 380 L 145 470 L 255 470 L 245 380 Z" fill="#c9a876" stroke="#8b7355" stroke-width="2"/>
+  <!-- Main stem -->
+  <line x1="200" y1="380" x2="200" y2="100" stroke="#4a6741" stroke-width="3" stroke-linecap="round"/>
+  <!-- Orchid leaves -->
+  <path d="M 200 350 Q 160 330 150 280 Q 155 350 200 360" fill="url(#orchidStleaves)" stroke="#2d5a1f" stroke-width="1.5"/>
+  <path d="M 200 350 Q 240 330 250 280 Q 245 350 200 360" fill="url(#orchidStleaves)" stroke="#2d5a1f" stroke-width="1.5"/>
+  <!-- Flower blooms -->
+  <!-- Top center bloom -->
+  <circle cx="200" cy="120" r="8" fill="#d946a6" opacity="0.9"/>
+  <circle cx="200" cy="110" r="6" fill="#f472b6"/>
+  <!-- Upper left petal -->
+  <circle cx="185" cy="110" r="5" fill="#f472b6" opacity="0.8"/>
+  <!-- Upper right petal -->
+  <circle cx="215" cy="110" r="5" fill="#f472b6" opacity="0.8"/>
+  <!-- Lower left petal -->
+  <circle cx="190" cy="130" r="5" fill="#fbcfe8" opacity="0.8"/>
+  <!-- Lower right petal -->
+  <circle cx="210" cy="130" r="5" fill="#fbcfe8" opacity="0.8"/>
+  <!-- Middle blooms -->
+  <!-- Left middle -->
+  <circle cx="160" cy="200" r="7" fill="#ec4899"/>
+  <circle cx="160" cy="190" r="4" fill="#f472b6"/>
+  <circle cx="150" cy="200" r="4" fill="#fbcfe8"/>
+  <circle cx="170" cy="200" r="4" fill="#fbcfe8"/>
+  <!-- Right middle -->
+  <circle cx="240" cy="190" r="7" fill="#ec4899"/>
+  <circle cx="240" cy="180" r="4" fill="#f472b6"/>
+  <circle cx="230" cy="190" r="4" fill="#fbcfe8"/>
+  <circle cx="250" cy="190" r="4" fill="#fbcfe8"/>
+  <!-- Lower blooms -->
+  <circle cx="200" cy="280" r="6" fill="#f472b6" opacity="0.9"/>
+  <circle cx="180" cy="240" r="5" fill="#fbcfe8" opacity="0.8"/>
+  <circle cx="220" cy="240" r="5" fill="#fbcfe8" opacity="0.8"/>
+</svg>
