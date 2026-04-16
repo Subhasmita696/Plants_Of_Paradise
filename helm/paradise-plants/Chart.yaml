@@ -1,0 +1,6 @@
+apiVersion: v2
+name: paradise-plants
+description: "Helm chart for Paradise Plants application on AKS"
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

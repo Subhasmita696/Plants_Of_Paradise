@@ -1,0 +1,113 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - main
+
+variables:
+  azureSubscription: 'AzureServiceConnection'
+  resourceGroup: 'paradise-plants-rg'
+  location: 'eastus'
+  acrName: 'paradiseplantsacr'
+  aksClusterName: 'paradise-plants-aks'
+  frontendImageName: 'frontend'
+  backendImageName: 'backend'
+  imageTag: '$(Build.BuildId)'
+  argocdVersion: 'v2.8.3'
+
+stages:
+- stage: Build
+  displayName: Build and scan code
+  jobs:
+  - job: Build
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '18.x'
+    - script: |
+        cd frontend
+        npm install
+        npm run build
+        npm run lint
+      displayName: Build and lint frontend
+    - script: |
+        cd backend
+        npm install
+        npm audit --audit-level=high
+      displayName: Install backend dependencies and audit
+    - script: |
+        curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin latest
+        trivy fs --exit-code 1 --severity HIGH,CRITICAL frontend
+        trivy fs --exit-code 1 --severity HIGH,CRITICAL backend
+      displayName: Scan source code with Trivy
+
+- stage: BuildAndPushImages
+  displayName: Build and push Docker images
+  dependsOn: Build
+  jobs:
+  - job: ContainerBuild
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az acr login --name $(acrName)
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin latest
+          docker build -f backend/Dockerfile -t $(acrName).azurecr.io/$(backendImageName):$(imageTag) backend
+          docker build -f frontend/Dockerfile -t $(acrName).azurecr.io/$(frontendImageName):$(imageTag) frontend
+          trivy image --exit-code 1 --severity HIGH,CRITICAL $(acrName).azurecr.io/$(backendImageName):$(imageTag)
+          trivy image --exit-code 1 --severity HIGH,CRITICAL $(acrName).azurecr.io/$(frontendImageName):$(imageTag)
+          docker push $(acrName).azurecr.io/$(backendImageName):$(imageTag)
+          docker push $(acrName).azurecr.io/$(frontendImageName):$(imageTag)
+
+- stage: Deploy
+  displayName: Deploy to AKS with ArgoCD, Helm, Prometheus, and Grafana
+  dependsOn: BuildAndPushImages
+  jobs:
+  - job: DeployToAks
+    pool:
+      vmImage: ubuntu-latest
+    steps:
+    - checkout: self
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(azureSubscription)
+        scriptType: bash
+        scriptLocation: inlineScript
+        inlineScript: |
+          az aks get-credentials --resource-group $(resourceGroup) --name $(aksClusterName) --overwrite-existing
+          kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+          kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+          kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
+          curl -fsSL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo update
+          helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
+          helm upgrade --install grafana grafana/grafana -n monitoring --create-namespace
+          kubectl apply -f argocd/argocd-application.yaml
+          kubectl rollout status deployment/argocd-server -n argocd --timeout=180s
+          export ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode)
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/$(argocdVersion)/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+          nohup kubectl port-forward -n argocd svc/argocd-server 8080:443 >/tmp/argocd-port-forward.log 2>&1 &
+          sleep 15
+          argocd login localhost:8080 --grpc-web --insecure --username admin --password "${ARGOCD_PASSWORD}"
+          argocd app set paradise-plants \
+            --helm-set backend.image.repository=$(acrName).azurecr.io/$(backendImageName) \
+            --helm-set backend.image.tag=$(imageTag) \
+            --helm-set frontend.image.repository=$(acrName).azurecr.io/$(frontendImageName) \
+            --helm-set frontend.image.tag=$(imageTag)
+          argocd app sync paradise-plants

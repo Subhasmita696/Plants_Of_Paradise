@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "paradise-plants.fullname" . }}-backend
+  labels:
+    app: {{ include "paradise-plants.fullname" . }}
+    component: backend
+spec:
+  type: {{ .Values.service.backend.type }}
+  selector:
+    app: {{ include "paradise-plants.fullname" . }}
+    component: backend
+  ports:
+    - name: catalog
+      port: {{ .Values.backend.ports.catalog }}
+      targetPort: {{ .Values.backend.ports.catalog }}
+    - name: inventory
+      port: {{ .Values.backend.ports.inventory }}
+      targetPort: {{ .Values.backend.ports.inventory }}
+    - name: orders
+      port: {{ .Values.backend.ports.orders }}
+      targetPort: {{ .Values.backend.ports.orders }}
+    - name: care-reminders
+      port: {{ .Values.backend.ports.careReminders }}
+      targetPort: {{ .Values.backend.ports.careReminders }}

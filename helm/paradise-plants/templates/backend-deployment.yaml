@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "paradise-plants.fullname" . }}-backend
+  labels:
+    app: {{ include "paradise-plants.fullname" . }}
+    component: backend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "paradise-plants.fullname" . }}
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: {{ include "paradise-plants.fullname" . }}
+        component: backend
+    spec:
+      imagePullSecrets: {{ toYaml .Values.imagePullSecrets | nindent 6 }}
+      containers:
+        - name: backend
+          image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+          imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.backend.ports.catalog }}
+            - containerPort: {{ .Values.backend.ports.inventory }}
+            - containerPort: {{ .Values.backend.ports.orders }}
+            - containerPort: {{ .Values.backend.ports.careReminders }}
+          env:
+            - name: CATALOG_PORT
+              value: "{{ .Values.backend.ports.catalog }}"
+            - name: INVENTORY_PORT
+              value: "{{ .Values.backend.ports.inventory }}"
+            - name: ORDERS_PORT
+              value: "{{ .Values.backend.ports.orders }}"
+            - name: CARE_REMINDERS_PORT
+              value: "{{ .Values.backend.ports.careReminders }}"

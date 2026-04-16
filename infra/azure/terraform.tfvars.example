@@ -1,0 +1,11 @@
+resource_group_name = "paradise-plants-rg"
+location            = "eastus"
+aks_name            = "paradise-plants-aks"
+acr_name            = "paradiseplantsacr"
+admin_ssh_public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC... replace-with-your-key"
+node_count          = 3
+node_vm_size        = "Standard_D4s_v3"
+tags = {
+  project = "paradise-plants"
+  owner   = "devops"
+}

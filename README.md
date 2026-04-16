@@ -6,6 +6,56 @@ A modern, full-stack microservices-based e-commerce platform for managing and se
 
 ---
 
+## 📁 Project Structure
+
+```
+Plants_of_paradise/
+├── backend/                 # Node.js microservices
+│   ├── services/            # 4 microservices (catalog, inventory, orders, care-reminders)
+│   ├── shared/              # Shared database and validation
+│   ├── docs/                # API documentation
+│   ├── Dockerfile           # Backend container
+│   └── package.json         # Backend dependencies
+│
+├── frontend/                # React application
+│   ├── src/
+│   │   ├── api/             # API client & hooks
+│   │   ├── pages/           # Page components
+│   │   ├── components/      # UI components
+│   │   └── lib/             # Utilities
+│   ├── public/              # Static assets
+│   ├── Dockerfile           # Frontend container
+│   └── package.json         # Frontend dependencies
+│
+├── infra/azure/             # Terraform for AKS & ACR
+│   ├── main.tf              # Infrastructure config
+│   ├── variables.tf         # Input variables
+│   ├── outputs.tf           # Output values
+│   └── terraform.tfvars.example
+│
+├── helm/paradise-plants/    # Helm chart for deployment
+│   ├── Chart.yaml           # Chart metadata
+│   ├── values.yaml          # Default values
+│   └── templates/           # Kubernetes manifests
+│
+├── argocd/                  # ArgoCD application manifest
+│   └── argocd-application.yaml
+│
+├── docs/                    # Documentation
+│   ├── 1-ARCHITECTURE.md    # Architecture overview
+│   ├── 2-DEVOPS_WORKFLOW.md # DevOps workflow
+│   ├── 3-INSTALLATION_GUIDE.md # Installation guide
+│   └── DOCKER_GUIDE.md      # Docker guide
+│
+├── config/                  # Configuration files
+├── dependencies/            # Lock files
+├── azure-pipelines.yml      # Azure DevOps CI/CD pipeline
+├── docker-compose.yml       # Local Docker setup
+├── COMPLETE_GUIDE.md        # Full documentation
+├── README.md                # This file
+└── README_TOOLS.md          # Tools installation guide
+```
+
 ## ⚡ Quick Start
 
 ### 🐳 Fastest Way (Docker)
@@ -77,12 +127,74 @@ MySQL Database [Port 3306]
 
 ---
 
+## 🚀 DevOps & Deployment
+
+This project includes a full cloud-native deployment workflow:
+- Azure DevOps pipeline for build, scan, and deploy
+- Terraform for Azure infrastructure (AKS, ACR, networking)
+- Docker container images built for frontend and backend
+- ArgoCD + Helm for GitOps deployment to AKS
+- Prometheus and Grafana for runtime monitoring
+- Trivy for source and image security scanning
+
+### Required infrastructure
+
+#### Production-like deployment resources
+- **1 Azure Resource Group**
+- **1 Azure Kubernetes Service (AKS) cluster**
+  - Recommended node count: 3
+  - Recommended VM size: `Standard_D4s_v3`
+- **1 Azure Container Registry (ACR)**
+- **1 Azure Log Analytics workspace**
+- **1 AKS managed identity** for ACR pull permissions
+- **1 Azure DevOps agent / build host**
+- **1 ArgoCD deployment** inside the AKS cluster
+- **1 Prometheus deployment** inside the AKS cluster
+- **1 Grafana deployment** inside the AKS cluster
+
+#### Optional supporting resources
+- **1 MySQL database** (managed or inside Kubernetes)
+- **1 storage account** for backups and logs
+- **1 DNS or ingress controller** for external access
+
+### Server and resource count
+
+Minimum recommended resources for production-style use:
+- **AKS Control Plane**: managed by Azure (no user-managed VMs)
+- **AKS Worker Nodes**: at least 3
+- **ACR registry**: 1
+- **Log Analytics workspace**: 1
+- **Monitoring stack**: 2 deployments (Prometheus + Grafana)
+- **ArgoCD**: 1 deployment
+
+### Deployment flow
+
+1. Code is pushed to the repository.
+2. Azure DevOps pipeline builds and scans frontend/backend.
+3. Docker images are created and scanned with Trivy.
+4. Images are pushed to ACR.
+5. AKS deployment is managed by ArgoCD using Helm.
+6. Prometheus and Grafana provide cluster observability.
+
+### Files supporting DevOps
+- `azure-pipelines.yml` — Azure DevOps pipeline definition
+- `infra/azure/` — Terraform configuration for AKS, ACR, and networking
+- `helm/paradise-plants/` — Helm chart for frontend and backend deployment
+- `argocd/argocd-application.yaml` — ArgoCD application manifest
+
+### Notes
+- The pipeline assumes an Azure service connection is configured in Azure DevOps.
+- ACR and AKS are connected via AKS managed identity with `AcrPull` permission.
+- The project uses GitOps: changes to Helm/ArgoCD manifests are the source of truth for deployments.
+
+---
 ## 📖 Documentation
 
 - **[Complete Guide](COMPLETE_GUIDE.md)** - Full documentation with setup, usage, and deployment
 - **[API Documentation](backend/docs/API.md)** - All endpoints documented
 - **[Postman Collection](backend/docs/paradise-plants-api.postman_collection.json)** - Import to test APIs
 - **[OpenAPI Spec](backend/docs/openapi.json)** - OpenAPI 3.0 specification
+- **[Tools Installation](README_TOOLS.md)** - Install Docker, Trivy, Helm, ArgoCD, Prometheus, Grafana
 
 ---
 
@@ -96,28 +208,7 @@ MySQL Database [Port 3306]
 
 ---
 
-## 📁 Project Structure
 
-```
-paradise-plants/
-├── frontend/                  # React application
-│   ├── src/api/             # API client & hooks
-│   ├── src/pages/           # Page components
-│   ├── src/components/      # UI components
-│   └── src/data/            # Mock data
-│
-├── backend/                 # Node.js microservices
-│   ├── services/            # 4 microservices
-│   ├── shared/database/     # Database config
-│   └── docs/                # API documentation
-│
-├── docker-compose.yml       # Complete setup
-└── COMPLETE_GUIDE.md        # Full documentation
-```
-
----
-
-## 🔧 Available Commands
 
 ### Backend
 
@@ -151,52 +242,6 @@ docker-compose ps         # Check status
 
 ---
 
-## 🌐 API Endpoints (Quick Reference)
-
-<details>
-<summary>Click to expand API endpoints</summary>
-
-### Catalog Service (3001)
-- `GET /api/plants` - All plants
-- `GET /api/plants/:id` - Single plant
-- `GET /api/plants/category/:category` - By category
-- `POST /api/plants` - Create plant
-
-### Inventory Service (3002)
-- `GET /api/inventory` - All stock
-- `GET /api/inventory/:plantId` - Plant stock
-- `GET /api/inventory/low-stock` - Low stock items
-- `PATCH /api/inventory/:plantId` - Update quantity
-
-### Orders Service (3003)
-- `GET /api/orders` - All orders
-- `GET /api/orders/:id` - Order details
-- `POST /api/orders` - Create order
-- `PATCH /api/orders/:id/status` - Update status
-
-### Care Reminders (3004)
-- `GET /api/care-reminders` - All reminders
-- `GET /api/care-reminders/upcoming` - Next 7 days
-- `POST /api/care-reminders` - Create reminder
-- `PATCH /api/care-reminders/:id/complete` - Mark done
-
-</details>
-
----
-
-## 📊 Database
-
-**Tables:**
-- `plants` - Product catalog
-- `inventory` - Stock levels
-- `orders` - Customer orders
-- `order_items` - Order line items
-- `care_reminders` - Plant care schedule
-
-**Pre-loaded with 10 Plants & 3 Sample Orders**
-
----
-
 ## ✨ Features
 
 ✅ Browse & search plants by name/category
@@ -225,16 +270,13 @@ docker-compose -f docker-compose.yml up -d
 # for production database and URLs
 ```
 
-### Frontend (Vercel, Netlify, etc.)
+### Azure AKS (Cloud)
 
-```bash
-npm run build
-# Deploy dist/ folder
-```
+See the [DevOps & Deployment](#-devops--deployment) section above for complete cloud deployment with Terraform, Helm, and ArgoCD.
 
 ---
 
-## 🐛 Troubleshooting
+## the DevOps & Deployment section above
 
 | Issue | Solution |
 |-------|----------|

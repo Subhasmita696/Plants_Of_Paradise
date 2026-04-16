@@ -1,6 +1,6 @@
 # 📚 Paradise Plants - Complete Documentation
 
-Welcome to the comprehensive documentation for deploying Paradise Plants to AWS EKS with full DevOps infrastructure!
+Welcome to the comprehensive documentation for deploying Paradise Plants to Azure AKS with full DevOps infrastructure!
 
 ---
 
@@ -36,9 +36,9 @@ Welcome to the comprehensive documentation for deploying Paradise Plants to AWS 
 📄 **File:** [2-DEVOPS_WORKFLOW.md](2-DEVOPS_WORKFLOW.md)
 
 **Learn:**
-- How many servers and AWS resources are created
+- How many servers and Azure resources are created
 - Complete infrastructure breakdown
-- CI/CD pipeline (Jenkins or AWS CodePipeline)
+- CI/CD pipeline (Azure DevOps Pipeline)
 - CD with ArgoCD and Helm
 - Kubernetes cluster architecture
 - Tool integration diagram
@@ -50,7 +50,7 @@ Welcome to the comprehensive documentation for deploying Paradise Plants to AWS 
 
 **Key sections:**
 ```
-├── Infrastructure overview (15-20 AWS resources)
+├── Infrastructure overview (15-20 Azure resources)
 ├── CI/CD pipeline architecture
 ├── Tool integration flow
 ├── Kubernetes namespaces & resources
@@ -70,9 +70,9 @@ Welcome to the comprehensive documentation for deploying Paradise Plants to AWS 
 - Backend setup (Node.js, npm, Express)
 - Frontend setup (React, Vite, Shadcn UI)
 - Docker installation and configuration
-- AWS CLI setup and credentials
+- Azure CLI setup and credentials
 - Terraform installation
-- Jenkins installation
+- Azure DevOps Pipeline setup
 - Kubernetes tools (kubectl, Helm, ArgoCD)
 - Monitoring tools (Prometheus, Grafana, OpenSearch)
 - Verification and testing
@@ -87,9 +87,9 @@ Welcome to the comprehensive documentation for deploying Paradise Plants to AWS 
 ├── Backend setup & database
 ├── Frontend setup
 ├── Docker & container tools
-├── AWS tools (CLI, credentials)
+├── Azure tools (CLI, credentials)
 ├── Infrastructure as Code (Terraform)
-├── CI/CD tools (Jenkins)
+├── CI/CD tools (Azure DevOps)
 ├── Kubernetes tools (kubectl, Helm, ArgoCD)
 ├── Monitoring tools
 ├── Verification commands

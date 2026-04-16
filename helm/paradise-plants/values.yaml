@@ -1,0 +1,28 @@
+replicaCount: 1
+
+backend:
+  image:
+    repository: "REPLACE_WITH_ACR_LOGIN_SERVER/backend"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  ports:
+    catalog: 3001
+    inventory: 3002
+    orders: 3003
+    careReminders: 3004
+
+frontend:
+  image:
+    repository: "REPLACE_WITH_ACR_LOGIN_SERVER/frontend"
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  port: 80
+
+service:
+  backend:
+    type: ClusterIP
+  frontend:
+    type: LoadBalancer
+    port: 80
+
+imagePullSecrets: []

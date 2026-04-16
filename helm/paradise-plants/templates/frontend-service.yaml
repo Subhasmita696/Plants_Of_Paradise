@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "paradise-plants.fullname" . }}-frontend
+  labels:
+    app: {{ include "paradise-plants.fullname" . }}
+    component: frontend
+spec:
+  type: {{ .Values.service.frontend.type }}
+  selector:
+    app: {{ include "paradise-plants.fullname" . }}
+    component: frontend
+  ports:
+    - name: http
+      port: {{ .Values.service.frontend.port }}
+      targetPort: {{ .Values.frontend.port }}
