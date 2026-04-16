@@ -4,7 +4,7 @@ metadata:
   name: paradise-plants
   namespace: argocd
 spec:
-  project: default
+  project: paradise-plants
   source:
     repoURL: https://github.com/Subhasmita696/Plants_Of_Paradise.git
     targetRevision: main
