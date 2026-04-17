@@ -11,23 +11,24 @@ const careLevelColor = {
 };
 
 const plantImages: Record<string, string> = {
-  'Monstera Deliciosa': '/images/monstera.svg',
-  'Pothos (Devil\'s Ivy)': '/images/pothos.svg',
-  'Snake Plant': '/images/snake-plant.svg',
-  'Fiddle Leaf Fig': '/images/fiddle-leaf.svg',
-  'ZZ Plant': '/images/zz-plant.svg',
-  'Philodendron Heart Leaf': '/images/philodendron.svg',
-  'Rubber Plant': '/images/rubber-plant.svg',
-  'Spider Plant': '/images/spider-plant.svg',
-  'Alocasia': '/images/alocasia.svg',
-  'Orchid': '/images/orchid.svg',
+  'Monstera Deliciosa': '/images/monstera.jpg',
+  'Pothos Golden': '/images/pothos.jpg',
+  'Snake Plant': '/images/snake-plant.jpg',
+  'Fiddle Leaf Fig': '/images/fiddle-leaf.jpg',
+  'ZZ Plant': '/images/zz-plant.jpg',
+  'Philodendron Heart Leaf': '/images/philodendron.jpg',
+  'Rubber Plant': '/images/rubber-plant.jpg',
+  'Spider Plant': '/images/spider-plant.jpg',
+  'Alocasia': '/images/alocasia.jpg',
+  'Orchid': '/images/orchid.jpg',
+  'Peace Lily': '/images/peace-lily.jpg',
 };
 
 export default function PlantCard({ plant, index }: { plant: Plant; index: number }) {
   const [imageFailed, setImageFailed] = useState(false);
   
   // Try to use local image first, fallback to plant data image
-  const imageSource = plantImages[plant.name] || plant.image || '/placeholder.svg';
+  const imageSource = plantImages[plant.name] || plant.image || '/placeholder.jpg';
   const displayImage = imageFailed && plant.image !== imageSource ? plant.image : imageSource;
   
   return (
