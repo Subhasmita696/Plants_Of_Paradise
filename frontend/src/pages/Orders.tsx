@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useOrders } from '@/api/hooks/useApi';
+import { useCart } from '@/context/CartContext';
 
 const statusColors: Record<string, string> = {
   pending: 'bg-muted text-muted-foreground',
@@ -12,6 +13,7 @@ const statusColors: Record<string, string> = {
 
 export default function Orders() {
   const { orders, loading, error, fetchAllOrders } = useOrders();
+  const { items, itemCount, total, removeItem, clearCart } = useCart();
 
   useEffect(() => {
     fetchAllOrders();
@@ -44,6 +46,53 @@ export default function Orders() {
         >
           {loading ? '🔄 Refreshing...' : '🔄 Refresh'}
         </button>
+      </div>
+
+      <div className="rounded-xl border border-border bg-card p-5 shadow-card">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="font-display text-lg font-semibold text-foreground">Draft Cart</h2>
+            <p className="text-sm text-muted-foreground">Items added from the catalog appear here.</p>
+          </div>
+          {itemCount > 0 && (
+            <button
+              onClick={clearCart}
+              className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:bg-muted"
+            >
+              Clear cart
+            </button>
+          )}
+        </div>
+
+        {itemCount === 0 ? (
+          <p className="mt-4 text-sm text-muted-foreground">No items in your cart yet.</p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {items.map((item) => (
+              <div key={item.id} className="flex items-center justify-between rounded-lg bg-muted/40 px-4 py-3">
+                <div>
+                  <p className="text-sm font-medium text-foreground">{item.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Qty {item.quantity} · ${item.price.toFixed(2)} each
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <p className="text-sm font-semibold text-foreground">${(item.quantity * item.price).toFixed(2)}</p>
+                  <button
+                    onClick={() => removeItem(item.id)}
+                    className="rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-muted-foreground transition hover:bg-muted"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+            <div className="flex items-center justify-between border-t border-border pt-3">
+              <p className="text-sm text-muted-foreground">{itemCount} items in cart</p>
+              <p className="font-display text-lg font-bold text-foreground">${total.toFixed(2)}</p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-card">

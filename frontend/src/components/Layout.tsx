@@ -2,6 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Leaf, ShoppingCart, Package, Bell, LayoutDashboard, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useCart } from '@/context/CartContext';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -14,6 +15,7 @@ const navItems = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { itemCount, total } = useCart();
 
   return (
     <div className="min-h-screen bg-background">
@@ -42,12 +44,21 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 }`}
               >
                 <item.icon className="h-4 w-4" />
-                {item.label}
+                <span className="flex-1">{item.label}</span>
+                {item.path === '/orders' && itemCount > 0 && (
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${active ? 'bg-primary-foreground/20 text-primary-foreground' : 'bg-primary/10 text-primary'}`}>
+                    {itemCount}
+                  </span>
+                )}
               </Link>
             );
           })}
         </nav>
         <div className="border-t border-border px-6 py-4">
+          <div className="mb-3 rounded-lg bg-muted/50 px-3 py-2">
+            <p className="text-xs font-medium text-foreground">Draft Cart</p>
+            <p className="text-xs text-muted-foreground">{itemCount} items · ${total.toFixed(2)}</p>
+          </div>
           <p className="text-xs text-muted-foreground">v1.0.0 · 6 Microservices</p>
         </div>
       </aside>
@@ -60,9 +71,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <span className="font-display text-base font-bold">Plant of Paradise</span>
         </div>
-        <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-foreground">
-          {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <Link to="/orders" className="relative p-2 text-foreground">
+            <ShoppingCart className="h-5 w-5" />
+            {itemCount > 0 && (
+              <span className="absolute -right-1 -top-1 rounded-full bg-primary px-1.5 py-0.5 text-[10px] font-semibold text-primary-foreground">
+                {itemCount}
+              </span>
+            )}
+          </Link>
+          <button onClick={() => setMobileOpen(!mobileOpen)} className="p-2 text-foreground">
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </header>
 
       <AnimatePresence>

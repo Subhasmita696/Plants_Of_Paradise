@@ -1,6 +1,8 @@
 import { motion } from 'framer-motion';
 import { Droplets, Sun, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
+import { toast } from '@/components/ui/sonner';
+import { useCart } from '@/context/CartContext';
 
 type PlantCardPlant = {
   id: number | string;
@@ -45,6 +47,7 @@ const plantImages: Record<string, string> = {
 
 export default function PlantCard({ plant, index = 0 }: { plant: PlantCardPlant; index?: number }) {
   const [imageFailed, setImageFailed] = useState(false);
+  const { addItem } = useCart();
   const badgeLabel = plant.category || plant.careLevel || 'Plant';
   const lightLabel = plant.light_requirements || plant.light || 'Varies';
   const waterLabel = plant.water_frequency || plant.water || 'Varies';
@@ -55,6 +58,19 @@ export default function PlantCard({ plant, index = 0 }: { plant: PlantCardPlant;
   const displayImage = imageFailed && (plant.image_url || plant.image) !== imageSource
     ? (plant.image_url || plant.image || '/placeholder.jpg')
     : imageSource;
+
+  const handleAddToCart = () => {
+    addItem({
+      id: String(plant.id),
+      name: plant.name,
+      price: Number(plant.price),
+      image_url: plant.image_url || plant.image,
+    });
+
+    toast.success(`${plant.name} added to cart`, {
+      description: 'Open Orders to review your draft cart items.',
+    });
+  };
   
   return (
     <motion.div
@@ -90,7 +106,10 @@ export default function PlantCard({ plant, index = 0 }: { plant: PlantCardPlant;
           <span className="flex items-center gap-1"><Sun className="h-3 w-3" />{lightLabel}</span>
           <span className="flex items-center gap-1"><Droplets className="h-3 w-3" />{waterLabel}</span>
         </div>
-        <button className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90">
+        <button
+          onClick={handleAddToCart}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+        >
           <ShoppingCart className="h-4 w-4" /> Add to Cart
         </button>
       </div>
