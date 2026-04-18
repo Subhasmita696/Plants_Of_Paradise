@@ -25,6 +25,22 @@ app.get('/api/inventory', async (req, res) => {
   }
 });
 
+// Get low stock items
+app.get('/api/inventory/low-stock', async (req, res) => {
+  try {
+    const lowStock = await executeQuery(
+      `SELECT inv.*, plants.name 
+       FROM inventory inv 
+       JOIN plants ON inv.plant_id = plants.id 
+       WHERE inv.quantity_in_stock <= inv.reorder_level`
+    );
+    res.json(lowStock);
+  } catch (error) {
+    console.error('Error fetching low stock:', error);
+    res.status(500).json({ error: 'Failed to fetch low stock items' });
+  }
+});
+
 // Get inventory for specific plant
 app.get('/api/inventory/:plantId', async (req, res) => {
   try {
@@ -43,22 +59,6 @@ app.get('/api/inventory/:plantId', async (req, res) => {
   } catch (error) {
     console.error('Error fetching inventory:', error);
     res.status(500).json({ error: 'Failed to fetch inventory' });
-  }
-});
-
-// Get low stock items
-app.get('/api/inventory/low-stock', async (req, res) => {
-  try {
-    const lowStock = await executeQuery(
-      `SELECT inv.*, plants.name 
-       FROM inventory inv 
-       JOIN plants ON inv.plant_id = plants.id 
-       WHERE inv.quantity_in_stock <= inv.reorder_level`
-    );
-    res.json(lowStock);
-  } catch (error) {
-    console.error('Error fetching low stock:', error);
-    res.status(500).json({ error: 'Failed to fetch low stock items' });
   }
 });
 

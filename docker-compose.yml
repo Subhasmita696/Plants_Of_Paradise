@@ -43,7 +43,7 @@ services:
       CATALOG_PORT: 3001
       INVENTORY_PORT: 3002
       ORDERS_PORT: 3003
-      REMINDERS_PORT: 3004
+      CARE_REMINDERS_PORT: 3004
     ports:
       - "3001:3001"
       - "3002:3002"
@@ -74,12 +74,6 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    environment:
-      VITE_API_URL: http://localhost:3001
-      VITE_CATALOG_API: http://localhost:3001
-      VITE_INVENTORY_API: http://localhost:3002
-      VITE_ORDERS_API: http://localhost:3003
-      VITE_REMINDERS_API: http://localhost:3004
     networks:
       - paradise-network
     restart: unless-stopped

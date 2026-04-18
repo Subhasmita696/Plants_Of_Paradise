@@ -1,9 +1,9 @@
 // API Configuration
 const API_CONFIG = {
-  catalog: process.env.VITE_CATALOG_API ?? 'http://localhost:3001',
-  inventory: process.env.VITE_INVENTORY_API ?? 'http://localhost:3002',
-  orders: process.env.VITE_ORDERS_API ?? 'http://localhost:3003',
-  careReminders: process.env.VITE_CARE_REMINDERS_API ?? 'http://localhost:3004',
+  catalog: import.meta.env.VITE_CATALOG_API ?? '/api/catalog',
+  inventory: import.meta.env.VITE_INVENTORY_API ?? '/api/inventory',
+  orders: import.meta.env.VITE_ORDERS_API ?? '/api/orders',
+  careReminders: import.meta.env.VITE_CARE_REMINDERS_API ?? '/api/care-reminders',
 };
 
 // Cache for requests
@@ -94,7 +94,7 @@ export const apiRequest = async (
       }
 
       const data = await response.json();
-      let result = applyResponseInterceptors(data);
+      const result = applyResponseInterceptors(data);
 
       // Cache successful GET requests
       if (config.method === 'GET' && useCache) {
@@ -122,20 +122,20 @@ export const apiRequest = async (
 // Service-specific functions
 export const catalogAPI = {
   getAllPlants: (useCache = true) =>
-    apiRequest(`${API_CONFIG.catalog}/api/plants`, {}, useCache),
+    apiRequest(`${API_CONFIG.catalog}/plants`, {}, useCache),
 
   getPlantById: (id, useCache = true) =>
-    apiRequest(`${API_CONFIG.catalog}/api/plants/${id}`, {}, useCache),
+    apiRequest(`${API_CONFIG.catalog}/plants/${id}`, {}, useCache),
 
   getPlantsByCategory: (category, useCache = true) =>
     apiRequest(
-      `${API_CONFIG.catalog}/api/plants/category/${category}`,
+      `${API_CONFIG.catalog}/plants/category/${category}`,
       {},
       useCache
     ),
 
   createPlant: (plantData) =>
-    apiRequest(`${API_CONFIG.catalog}/api/plants`, {
+    apiRequest(`${API_CONFIG.catalog}/plants`, {
       method: 'POST',
       body: JSON.stringify(plantData),
     }),
@@ -146,20 +146,20 @@ export const catalogAPI = {
 
 export const inventoryAPI = {
   getAllInventory: (useCache = true) =>
-    apiRequest(`${API_CONFIG.inventory}/api/inventory`, {}, useCache),
+    apiRequest(`${API_CONFIG.inventory}`, {}, useCache),
 
   getInventoryByPlantId: (plantId, useCache = true) =>
     apiRequest(
-      `${API_CONFIG.inventory}/api/inventory/${plantId}`,
+      `${API_CONFIG.inventory}/${plantId}`,
       {},
       useCache
     ),
 
   getLowStockItems: (useCache = true) =>
-    apiRequest(`${API_CONFIG.inventory}/api/inventory/low-stock`, {}, useCache),
+    apiRequest(`${API_CONFIG.inventory}/low-stock`, {}, useCache),
 
   updateInventory: (plantId, quantity) =>
-    apiRequest(`${API_CONFIG.inventory}/api/inventory/${plantId}`, {
+    apiRequest(`${API_CONFIG.inventory}/${plantId}`, {
       method: 'PATCH',
       body: JSON.stringify({ quantity_in_stock: quantity }),
     }),
@@ -170,19 +170,19 @@ export const inventoryAPI = {
 
 export const ordersAPI = {
   getAllOrders: (useCache = true) =>
-    apiRequest(`${API_CONFIG.orders}/api/orders`, {}, useCache),
+    apiRequest(`${API_CONFIG.orders}`, {}, useCache),
 
   getOrderById: (id, useCache = true) =>
-    apiRequest(`${API_CONFIG.orders}/api/orders/${id}`, {}, useCache),
+    apiRequest(`${API_CONFIG.orders}/${id}`, {}, useCache),
 
   createOrder: (orderData) =>
-    apiRequest(`${API_CONFIG.orders}/api/orders`, {
+    apiRequest(`${API_CONFIG.orders}`, {
       method: 'POST',
       body: JSON.stringify(orderData),
     }),
 
   updateOrderStatus: (id, status) =>
-    apiRequest(`${API_CONFIG.orders}/api/orders/${id}/status`, {
+    apiRequest(`${API_CONFIG.orders}/${id}/status`, {
       method: 'PATCH',
       body: JSON.stringify({ status }),
     }),
@@ -193,30 +193,30 @@ export const ordersAPI = {
 
 export const careRemindersAPI = {
   getAllReminders: (useCache = true) =>
-    apiRequest(`${API_CONFIG.careReminders}/api/care-reminders`, {}, useCache),
+    apiRequest(`${API_CONFIG.careReminders}`, {}, useCache),
 
   getPlantReminders: (plantId, useCache = true) =>
     apiRequest(
-      `${API_CONFIG.careReminders}/api/care-reminders/plant/${plantId}`,
+      `${API_CONFIG.careReminders}/plant/${plantId}`,
       {},
       useCache
     ),
 
   getUpcomingReminders: (useCache = true) =>
     apiRequest(
-      `${API_CONFIG.careReminders}/api/care-reminders/upcoming`,
+      `${API_CONFIG.careReminders}/upcoming`,
       {},
       useCache
     ),
 
   createReminder: (reminderData) =>
-    apiRequest(`${API_CONFIG.careReminders}/api/care-reminders`, {
+    apiRequest(`${API_CONFIG.careReminders}`, {
       method: 'POST',
       body: JSON.stringify(reminderData),
     }),
 
   completeReminder: (id) =>
-    apiRequest(`${API_CONFIG.careReminders}/api/care-reminders/${id}/complete`, {
+    apiRequest(`${API_CONFIG.careReminders}/${id}/complete`, {
       method: 'PATCH',
     }),
 

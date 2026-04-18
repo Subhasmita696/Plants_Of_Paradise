@@ -19,8 +19,8 @@ const validatePlantInput = (data) => {
     errors.push('Category is required');
   }
   
-  if (typeof data.water_frequency !== 'number' || data.water_frequency < 1) {
-    errors.push('Water frequency must be a positive number');
+  if (!data.water_frequency || typeof data.water_frequency !== 'string' || data.water_frequency.trim().length === 0) {
+    errors.push('Water frequency is required');
   }
   
   return {
@@ -31,17 +31,9 @@ const validatePlantInput = (data) => {
 
 const validateInventoryInput = (data) => {
   const errors = [];
-  
-  if (typeof data.plant_id !== 'number' || data.plant_id < 1) {
-    errors.push('Valid plant ID is required');
-  }
-  
+
   if (typeof data.quantity_in_stock !== 'number' || data.quantity_in_stock < 0) {
     errors.push('Quantity must be non-negative');
-  }
-  
-  if (typeof data.reorder_level !== 'number' || data.reorder_level < 0) {
-    errors.push('Reorder level must be non-negative');
   }
   
   return {
@@ -82,12 +74,12 @@ const validateReminderInput = (data) => {
     errors.push('Valid plant ID is required');
   }
   
-  if (!data.reminder_type || !['watering', 'fertilizing', 'pruning', 'repotting'].includes(data.reminder_type)) {
-    errors.push('Valid reminder type (watering, fertilizing, pruning, repotting) is required');
+  if (!data.reminder_type || !['watering', 'fertilizing', 'pruning', 'repotting', 'inspection'].includes(data.reminder_type)) {
+    errors.push('Valid reminder type (watering, fertilizing, pruning, repotting, inspection) is required');
   }
   
-  if (typeof data.frequency !== 'number' || data.frequency < 1) {
-    errors.push('Frequency must be a positive number');
+  if (!data.frequency || typeof data.frequency !== 'string' || data.frequency.trim().length === 0) {
+    errors.push('Frequency is required');
   }
   
   return {

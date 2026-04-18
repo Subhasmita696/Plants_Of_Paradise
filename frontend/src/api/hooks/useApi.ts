@@ -277,6 +277,7 @@ export const useCareReminders = () => {
     setError(null);
     try {
       const data = await careRemindersAPI.getUpcomingReminders();
+      setReminders(data);
       return data;
     } catch (err) {
       setError(err.message);
