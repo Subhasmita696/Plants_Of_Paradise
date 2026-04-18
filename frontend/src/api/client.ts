@@ -122,20 +122,20 @@ export const apiRequest = async (
 // Service-specific functions
 export const catalogAPI = {
   getAllPlants: (useCache = true) =>
-    apiRequest(`${API_CONFIG.catalog}/plants`, {}, useCache),
+    apiRequest(`${API_CONFIG.catalog}`, {}, useCache),
 
   getPlantById: (id, useCache = true) =>
-    apiRequest(`${API_CONFIG.catalog}/plants/${id}`, {}, useCache),
+    apiRequest(`${API_CONFIG.catalog}/${id}`, {}, useCache),
 
   getPlantsByCategory: (category, useCache = true) =>
     apiRequest(
-      `${API_CONFIG.catalog}/plants/category/${category}`,
+      `${API_CONFIG.catalog}/category/${category}`,
       {},
       useCache
     ),
 
   createPlant: (plantData) =>
-    apiRequest(`${API_CONFIG.catalog}/plants`, {
+    apiRequest(`${API_CONFIG.catalog}`, {
       method: 'POST',
       body: JSON.stringify(plantData),
     }),

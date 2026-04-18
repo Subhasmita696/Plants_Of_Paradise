@@ -7,11 +7,15 @@ INSERT INTO plants (name, scientific_name, description, price, category, light_r
 ('Snake Plant', 'Sansevieria trifasciata', 'Low maintenance succulent with striking vertical leaves', 19.99, 'Succulent', 'Low to Bright', 'Monthly', 'Low', '/images/snake-plant.jpg'),
 ('Fiddle Leaf Fig', 'Ficus lyrata', 'Statement plant with large, violin-shaped leaves', 55.00, 'Tropical', 'Bright Indirect', 'Weekly', 'Medium', '/images/fiddle-leaf.jpg'),
 ('ZZ Plant', 'Zamioculcas zamiifolia', 'Extremely low maintenance plant with glossy leaflets', 24.99, 'Indoor', 'Low to Medium', 'Every 3 weeks', 'Low', '/images/zz-plant.jpg'),
-('Philodendron Heart Leaf', 'Philodendron hederaceum', 'Heart-shaped leaves, trailing or climbing growth', 14.99, 'Indoor', 'Low to Bright', 'Every 1-2 weeks', 'Medium', '/images/philodendron.jpg'),
+('Philodendron Heart Leaf', 'Philodendron hederaceum', 'Heart-shaped leaves, trailing or climbing growth', 14.99, 'Indoor', 'Low to Bright', 'Every 1-2 weeks', 'Medium', '/images/philodendron-heart-leaf.jpg'),
 ('Rubber Plant', 'Ficus elastica', 'Majestic plant with thick, dark green leaves', 35.50, 'Tropical', 'Bright Indirect', 'Weekly', 'Medium', '/images/rubber-plant.jpg'),
 ('Spider Plant', 'Chlorophytum comosum', 'Variegated leaves with dangling plantlets', 16.99, 'Indoor', 'Medium to Bright', 'Every 1-2 weeks', 'Medium', '/images/spider-plant.jpg'),
 ('Alocasia', 'Alocasia amazonica', 'Striking plant with arrow-shaped leaves and distinctive veining', 32.99, 'Tropical', 'Bright Indirect', 'Weekly', 'High', '/images/alocasia.jpg'),
-('Orchid', 'Orchidaceae', 'Exotic flowering plant in various colors', 29.99, 'Flowering', 'Bright Indirect', 'Weekly', 'High', '/images/orchid.jpg');
+('Orchid', 'Orchidaceae', 'Exotic flowering plant in various colors', 29.99, 'Flowering', 'Bright Indirect', 'Weekly', 'High', '/images/orchid-plant.jpg'),
+('Hibiscus', 'Hibiscus rosa-sinensis', 'Bold tropical blooms that add bright color to any flowering collection.', 27.99, 'Flowering', 'Bright Direct', 'Every 3-4 days', 'Medium', '/images/Hibiscus.jpg'),
+('Lavender', 'Lavandula angustifolia', 'Fragrant flowering herb with soft purple blooms and silvery foliage.', 18.99, 'Flowering', 'Bright Direct', 'Weekly', 'Low', '/images/Lavender.jpg'),
+('Peony', 'Paeonia lactiflora', 'Lush layered blossoms with a soft romantic look and seasonal flowering habit.', 31.99, 'Flowering', 'Bright Indirect', 'Every 4-5 days', 'Medium', '/images/Peony.jpg'),
+('Tulip', 'Tulipa gesneriana', 'Classic cup-shaped blooms that bring vivid spring color indoors.', 16.49, 'Flowering', 'Bright Indirect', 'Every 4-5 days', 'Medium', '/images/Tulip.jpg');
 
 -- Insert Inventory Data
 INSERT INTO inventory (plant_id, quantity_in_stock, reorder_level, supplier, storage_location) VALUES
@@ -24,7 +28,11 @@ INSERT INTO inventory (plant_id, quantity_in_stock, reorder_level, supplier, sto
 (7, 12, 8, 'Tropical Nursery Co', 'Shelf A3'),
 (8, 35, 18, 'Indoor Plants Inc', 'Shelf B4'),
 (9, 10, 8, 'Tropical Nursery Co', 'Shelf A4'),
-(10, 18, 10, 'Rare Orchids Ltd', 'Shelf D1');
+(10, 18, 10, 'Rare Orchids Ltd', 'Shelf D1'),
+(11, 14, 8, 'Tropical Blooms Co', 'Shelf D2'),
+(12, 20, 10, 'Herbal Garden Supply', 'Shelf D3'),
+(13, 9, 6, 'Seasonal Blossoms Ltd', 'Shelf D4'),
+(14, 24, 12, 'Spring Color Nursery', 'Shelf D5');
 
 -- Insert Sample Order
 INSERT INTO orders (order_number, customer_name, customer_email, customer_phone, total_amount, status, shipping_address) VALUES

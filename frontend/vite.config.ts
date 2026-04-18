@@ -8,6 +8,28 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/api/catalog": {
+        target: "http://127.0.0.1:3001",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/catalog/, "/api/plants"),
+      },
+      "/api/inventory": {
+        target: "http://127.0.0.1:3002",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/inventory/, "/api/inventory"),
+      },
+      "/api/orders": {
+        target: "http://127.0.0.1:3003",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/orders/, "/api/orders"),
+      },
+      "/api/care-reminders": {
+        target: "http://127.0.0.1:3004",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/care-reminders/, "/api/care-reminders"),
+      },
+    },
     hmr: {
       overlay: false,
     },

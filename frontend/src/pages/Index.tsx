@@ -2,12 +2,23 @@ import { motion } from 'framer-motion';
 import { Leaf, ShoppingCart, Package, Bell, TrendingUp, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import StatCard from '@/components/StatCard';
-import { plants, orders, careReminders } from '@/data/mock';
+import { useEffect } from 'react';
+import { useCatalog, useOrders, useInventory, useCareReminders } from '@/api/hooks/useApi';
 import heroImage from '@/assets/hero-plants.jpg';
 
-const todayReminders = careReminders.filter(r => !r.done && r.dueDate === '2026-04-08');
-
 export default function Index() {
+  const { plants, fetchAllPlants } = useCatalog();
+  const { orders, fetchAllOrders } = useOrders();
+  const { inventory, fetchAllInventory } = useInventory();
+  const { reminders, fetchUpcomingReminders } = useCareReminders();
+
+  useEffect(() => {
+    fetchAllPlants();
+    fetchAllOrders();
+    fetchAllInventory();
+    fetchUpcomingReminders();
+  }, [fetchAllInventory, fetchAllOrders, fetchAllPlants, fetchUpcomingReminders]);
+
   return (
     <div className="space-y-8">
       {/* Hero */}
@@ -39,9 +50,9 @@ export default function Index() {
       {/* Stats */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard icon={Leaf} title="Total Plants" value={plants.length} subtitle="In catalog" trend={{ value: '+3 this week', positive: true }} delay={0.1} />
-        <StatCard icon={ShoppingCart} title="Active Orders" value={orders.filter(o => o.status !== 'Delivered').length} subtitle="Processing & Shipped" delay={0.15} />
-        <StatCard icon={Package} title="Total Stock" value={plants.reduce((a, p) => a + p.stock, 0)} subtitle="Units across all plants" trend={{ value: '+12%', positive: true }} delay={0.2} />
-        <StatCard icon={Bell} title="Due Today" value={todayReminders.length} subtitle="Care reminders" delay={0.25} />
+        <StatCard icon={ShoppingCart} title="Active Orders" value={orders.filter(o => o.status !== 'delivered').length} subtitle="Processing & shipped" delay={0.15} />
+        <StatCard icon={Package} title="Total Stock" value={inventory.reduce((sum, item) => sum + (item.quantity_in_stock || 0), 0)} subtitle="Units across all plants" trend={{ value: '+12%', positive: true }} delay={0.2} />
+        <StatCard icon={Bell} title="Upcoming Tasks" value={reminders.length} subtitle="Care reminders" delay={0.25} />
       </div>
 
       {/* Quick sections */}
@@ -56,15 +67,15 @@ export default function Index() {
             {orders.slice(0, 4).map(order => (
               <div key={order.id} className="flex items-center justify-between rounded-lg bg-muted/50 px-4 py-3">
                 <div>
-                  <p className="text-sm font-medium text-foreground">{order.id}</p>
-                  <p className="text-xs text-muted-foreground">{order.customer} · {order.date}</p>
+                  <p className="text-sm font-medium text-foreground">{order.order_number}</p>
+                  <p className="text-xs text-muted-foreground">{order.customer_name} · {new Date(order.created_at).toLocaleDateString()}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-sm font-semibold text-foreground">${order.total}</p>
+                  <p className="text-sm font-semibold text-foreground">${Number(order.total_amount || 0).toFixed(2)}</p>
                   <span className={`text-xs font-medium ${
-                    order.status === 'Delivered' ? 'text-primary' :
-                    order.status === 'Shipped' ? 'text-accent' :
-                    order.status === 'Processing' ? 'text-sunshine' : 'text-muted-foreground'
+                    order.status === 'delivered' ? 'text-primary' :
+                    order.status === 'shipped' ? 'text-accent' :
+                    order.status === 'confirmed' ? 'text-sunshine' : 'text-muted-foreground'
                   }`}>{order.status}</span>
                 </div>
               </div>
@@ -79,13 +90,13 @@ export default function Index() {
             <Link to="/care" className="text-xs font-medium text-primary hover:underline">View all →</Link>
           </div>
           <div className="space-y-3">
-            {todayReminders.length === 0 && <p className="text-sm text-muted-foreground">All caught up! 🌿</p>}
-            {todayReminders.map(r => (
+            {reminders.length === 0 && <p className="text-sm text-muted-foreground">All caught up! 🌿</p>}
+            {reminders.slice(0, 4).map(r => (
               <div key={r.id} className="flex items-center gap-3 rounded-lg bg-muted/50 px-4 py-3">
                 <Bell className="h-4 w-4 text-accent" />
                 <div>
-                  <p className="text-sm font-medium text-foreground">{r.task}</p>
-                  <p className="text-xs text-muted-foreground">{r.plantName} · {r.frequency}</p>
+                  <p className="text-sm font-medium text-foreground">{r.reminder_type}</p>
+                  <p className="text-xs text-muted-foreground">{r.name} · {r.frequency}</p>
                 </div>
               </div>
             ))}

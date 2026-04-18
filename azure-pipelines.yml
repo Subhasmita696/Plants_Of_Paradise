@@ -18,6 +18,11 @@ variables:
   backendImageName: 'backend'
   imageTag: '$(Build.BuildId)'
   argocdVersion: 'v2.8.3'
+  dbHost: 'REPLACE_WITH_MYSQL_HOST'
+  dbPort: '3306'
+  dbName: 'paradise_plants'
+  dbUser: 'paradise_user'
+  dbPassword: 'CHANGE_ME'
 
 stages:
 - stage: Build
@@ -97,7 +102,8 @@ stages:
           helm repo update
           helm upgrade --install prometheus prometheus-community/kube-prometheus-stack -n monitoring --create-namespace
           helm upgrade --install grafana grafana/grafana -n monitoring --create-namespace
-          kubectl apply -f argocd/argocd-application.yaml
+          kubectl apply -f argocd/appproject.yaml
+          kubectl apply -f argocd/application.yaml
           kubectl rollout status deployment/argocd-server -n argocd --timeout=180s
           export ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 --decode)
           curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/$(argocdVersion)/argocd-linux-amd64
@@ -108,6 +114,11 @@ stages:
           argocd app set paradise-plants \
             --helm-set backend.image.repository=$(acrName).azurecr.io/$(backendImageName) \
             --helm-set backend.image.tag=$(imageTag) \
+            --helm-set backend.database.host=$(dbHost) \
+            --helm-set backend.database.port=$(dbPort) \
+            --helm-set backend.database.name=$(dbName) \
+            --helm-set backend.database.user=$(dbUser) \
+            --helm-set backend.database.password=$(dbPassword) \
             --helm-set frontend.image.repository=$(acrName).azurecr.io/$(frontendImageName) \
             --helm-set frontend.image.tag=$(imageTag)
           argocd app sync paradise-plants

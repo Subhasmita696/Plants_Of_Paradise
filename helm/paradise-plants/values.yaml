@@ -5,6 +5,12 @@ backend:
     repository: "REPLACE_WITH_ACR_LOGIN_SERVER/backend"
     tag: "latest"
     pullPolicy: IfNotPresent
+  database:
+    host: "REPLACE_WITH_MYSQL_HOST"
+    port: 3306
+    name: "paradise_plants"
+    user: "paradise_user"
+    password: "CHANGE_ME"
   ports:
     catalog: 3001
     inventory: 3002
