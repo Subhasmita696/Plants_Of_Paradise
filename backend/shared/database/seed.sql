@@ -52,12 +52,12 @@ INSERT INTO order_items (order_id, plant_id, quantity, unit_price, subtotal) VAL
 
 -- Insert Care Reminders
 INSERT INTO care_reminders (plant_id, reminder_type, frequency, last_performed, next_due_date, description, is_active) VALUES
-(1, 'watering', 'Weekly', '2026-04-01', '2026-04-08', 'Water when top inch of soil is dry', TRUE),
-(1, 'fertilizing', 'Monthly', '2026-03-01', '2026-04-01', 'Use balanced fertilizer', TRUE),
-(2, 'watering', 'Every 1-2 weeks', '2026-04-05', '2026-04-12', 'Keep soil moist but not soggy', TRUE),
-(3, 'watering', 'Monthly', '2026-03-15', '2026-04-15', 'Allow soil to dry between waterings', TRUE),
-(4, 'watering', 'Weekly', '2026-04-01', '2026-04-08', 'Bright indirect light is essential', TRUE),
-(4, 'pruning', 'Quarterly', '2026-01-15', '2026-04-15', 'Remove dead leaves and dust', TRUE),
-(5, 'watering', 'Every 3 weeks', '2026-03-20', '2026-04-10', 'Very drought tolerant', TRUE),
-(10, 'watering', 'Weekly', '2026-04-02', '2026-04-09', 'Orchids need careful watering', TRUE),
-(10, 'fertilizing', 'Every 2 weeks', '2026-03-25', '2026-04-08', 'Use orchid-specific fertilizer', TRUE);
+(1, 'watering', 'Weekly', DATE_SUB(CURDATE(), INTERVAL 2 DAY), DATE_ADD(CURDATE(), INTERVAL 5 DAY), 'Water when top inch of soil is dry', TRUE),
+(1, 'fertilizing', 'Monthly', DATE_SUB(CURDATE(), INTERVAL 20 DAY), DATE_ADD(CURDATE(), INTERVAL 6 DAY), 'Use balanced fertilizer', TRUE),
+(2, 'watering', 'Every 1-2 weeks', DATE_SUB(CURDATE(), INTERVAL 5 DAY), DATE_ADD(CURDATE(), INTERVAL 3 DAY), 'Keep soil moist but not soggy', TRUE),
+(3, 'watering', 'Monthly', DATE_SUB(CURDATE(), INTERVAL 22 DAY), DATE_ADD(CURDATE(), INTERVAL 7 DAY), 'Allow soil to dry between waterings', TRUE),
+(4, 'watering', 'Weekly', DATE_SUB(CURDATE(), INTERVAL 1 DAY), DATE_ADD(CURDATE(), INTERVAL 4 DAY), 'Bright indirect light is essential', TRUE),
+(4, 'pruning', 'Quarterly', DATE_SUB(CURDATE(), INTERVAL 60 DAY), DATE_ADD(CURDATE(), INTERVAL 2 DAY), 'Remove dead leaves and dust', TRUE),
+(5, 'watering', 'Every 3 weeks', DATE_SUB(CURDATE(), INTERVAL 10 DAY), DATE_ADD(CURDATE(), INTERVAL 1 DAY), 'Very drought tolerant', TRUE),
+(10, 'watering', 'Weekly', DATE_SUB(CURDATE(), INTERVAL 3 DAY), DATE_ADD(CURDATE(), INTERVAL 2 DAY), 'Orchids need careful watering', TRUE),
+(10, 'fertilizing', 'Every 2 weeks', DATE_SUB(CURDATE(), INTERVAL 7 DAY), DATE_ADD(CURDATE(), INTERVAL 4 DAY), 'Use orchid-specific fertilizer', TRUE);

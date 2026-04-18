@@ -10,6 +10,58 @@ const PORT = process.env.CARE_REMINDERS_PORT || 3004;
 app.use(cors());
 app.use(express.json());
 
+const calculateNextDueDate = (frequency, baseDate) => {
+  const normalized = String(frequency || '').toLowerCase().trim();
+  const nextDueDate = new Date(baseDate);
+
+  if (!normalized) {
+    nextDueDate.setDate(nextDueDate.getDate() + 7);
+    return nextDueDate;
+  }
+
+  const rangeMatch = normalized.match(/(\d+)\s*-\s*(\d+)\s*(day|week|month)/);
+  if (rangeMatch) {
+    const upperBound = Number(rangeMatch[2]);
+    const unit = rangeMatch[3];
+    if (unit === 'day') {
+      nextDueDate.setDate(nextDueDate.getDate() + upperBound);
+    } else if (unit === 'week') {
+      nextDueDate.setDate(nextDueDate.getDate() + upperBound * 7);
+    } else {
+      nextDueDate.setDate(nextDueDate.getDate() + upperBound * 30);
+    }
+    return nextDueDate;
+  }
+
+  const intervalMatch = normalized.match(/(\d+)\s*(day|week|month)/);
+  if (intervalMatch) {
+    const amount = Number(intervalMatch[1]);
+    const unit = intervalMatch[2];
+    if (unit === 'day') {
+      nextDueDate.setDate(nextDueDate.getDate() + amount);
+    } else if (unit === 'week') {
+      nextDueDate.setDate(nextDueDate.getDate() + amount * 7);
+    } else {
+      nextDueDate.setDate(nextDueDate.getDate() + amount * 30);
+    }
+    return nextDueDate;
+  }
+
+  if (normalized.includes('weekly') || normalized.includes('week')) {
+    nextDueDate.setDate(nextDueDate.getDate() + 7);
+  } else if (normalized.includes('monthly') || normalized.includes('month')) {
+    nextDueDate.setDate(nextDueDate.getDate() + 30);
+  } else if (normalized.includes('quarterly') || normalized.includes('quarter')) {
+    nextDueDate.setDate(nextDueDate.getDate() + 90);
+  } else if (normalized.includes('daily') || normalized.includes('day')) {
+    nextDueDate.setDate(nextDueDate.getDate() + 1);
+  } else {
+    nextDueDate.setDate(nextDueDate.getDate() + 7);
+  }
+
+  return nextDueDate;
+};
+
 // Get all care reminders
 app.get('/api/care-reminders', async (req, res) => {
   try {
@@ -98,18 +150,7 @@ app.patch('/api/care-reminders/:id/complete', async (req, res) => {
       return res.status(404).json({ error: 'Reminder not found' });
     }
     
-    // Simple next due date calculation (add 7 days for weekly, 30 for monthly, etc.)
-    let nextDueDate = new Date(today);
-    const frequency = reminders[0].frequency;
-    
-    if (frequency.includes('Weekly') || frequency.includes('week')) {
-      nextDueDate.setDate(nextDueDate.getDate() + 7);
-    } else if (frequency.includes('Monthly') || frequency.includes('month')) {
-      nextDueDate.setDate(nextDueDate.getDate() + 30);
-    } else if (frequency.includes('Quarterly') || frequency.includes('quarter')) {
-      nextDueDate.setDate(nextDueDate.getDate() + 90);
-    }
-    
+    const nextDueDate = calculateNextDueDate(reminders[0].frequency, today);
     const nextDueDateStr = nextDueDate.toISOString().split('T')[0];
     
     await executeQuery(
