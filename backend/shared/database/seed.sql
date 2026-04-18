@@ -22,16 +22,16 @@ INSERT INTO inventory (plant_id, quantity_in_stock, reorder_level, supplier, sto
 (1, 15, 10, 'Tropical Nursery Co', 'Shelf A1'),
 (2, 30, 15, 'Indoor Plants Inc', 'Shelf B2'),
 (3, 45, 20, 'Succulent Paradise', 'Shelf C3'),
-(4, 8, 5, 'Tropical Nursery Co', 'Shelf A2'),
+(4, 4, 5, 'Tropical Nursery Co', 'Shelf A2'),
 (5, 25, 12, 'ZZ Specialists', 'Shelf B1'),
 (6, 20, 10, 'Indoor Plants Inc', 'Shelf B3'),
 (7, 12, 8, 'Tropical Nursery Co', 'Shelf A3'),
 (8, 35, 18, 'Indoor Plants Inc', 'Shelf B4'),
-(9, 10, 8, 'Tropical Nursery Co', 'Shelf A4'),
-(10, 18, 10, 'Rare Orchids Ltd', 'Shelf D1'),
+(9, 6, 8, 'Tropical Nursery Co', 'Shelf A4'),
+(10, 7, 10, 'Rare Orchids Ltd', 'Shelf D1'),
 (11, 14, 8, 'Tropical Blooms Co', 'Shelf D2'),
 (12, 20, 10, 'Herbal Garden Supply', 'Shelf D3'),
-(13, 9, 6, 'Seasonal Blossoms Ltd', 'Shelf D4'),
+(13, 5, 6, 'Seasonal Blossoms Ltd', 'Shelf D4'),
 (14, 24, 12, 'Spring Color Nursery', 'Shelf D5');
 
 -- Insert Sample Order
