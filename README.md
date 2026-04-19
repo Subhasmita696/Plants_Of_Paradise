@@ -2,7 +2,20 @@
 
 This project demonstrates end-to-end DevOps architecture including infrastructure provisioning, containerization, automated deployment, and observability.
 
+> 💡 This project was designed and implemented end-to-end by me, covering infrastructure, CI/CD, deployment, and monitoring.
+
 A modern, full-stack microservices-based e-commerce platform for managing and selling plants. Built with React, Node.js, MySQL, and Docker.
+
+## 👨‍💻 My Contributions
+
+- Designed and implemented end-to-end DevOps architecture
+- Built CI/CD pipelines using GitHub Actions / Azure DevOps
+- Provisioned cloud infrastructure using Terraform (AWS & Azure)
+- Containerized applications using Docker
+- Deployed microservices on Kubernetes (EKS/AKS) using Helm
+- Implemented GitOps workflow using ArgoCD
+- Integrated monitoring with Prometheus and Grafana
+- Applied security scanning using Trivy
 
 **📚 [READ THE COMPLETE GUIDE →](COMPLETE_GUIDE.md)**
 
