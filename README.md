@@ -17,6 +17,23 @@ A modern, full-stack microservices-based e-commerce platform for managing and se
 - Integrated monitoring with Prometheus and Grafana
 - Applied security scanning using Trivy
 
+## 📸 Application Preview
+
+### 🏠 Dashboard
+![Dashboard](assets/dashboard.png)
+
+### 🌿 Plant Catalog
+![Catalog](assets/catalog.png)
+
+### 📦 Orders Management
+![Orders](assets/orders.png)
+
+### 📊 Inventory Monitoring
+![Inventory](assets/inventory.png)
+
+### ⏰ Care Reminders
+![Care](assets/care.png)
+
 **📚 [READ THE COMPLETE GUIDE →](COMPLETE_GUIDE.md)**
 
 ---
