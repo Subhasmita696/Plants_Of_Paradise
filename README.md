@@ -1,4 +1,6 @@
-# 🌿 Plants of Paradise - Plant E-Commerce Platform
+# 🌿 🚀 Cloud-native microservices platform deployed on Azure Kubernetes Service (AKS) using Terraform, GitOps (ArgoCD), and CI/CD pipelines.
+
+This project demonstrates end-to-end DevOps architecture including infrastructure provisioning, containerization, automated deployment, and observability.
 
 A modern, full-stack microservices-based e-commerce platform for managing and selling plants. Built with React, Node.js, MySQL, and Docker.
 
