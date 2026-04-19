@@ -37,10 +37,6 @@ A modern, full-stack microservices-based e-commerce platform for managing and se
 ![Care](assets/care.png)
 
 
-## 🎥 Demo Video
-
-https://github.com/user/repo/assets/xxxxx/video.mp4
-
 **📚 [READ THE COMPLETE GUIDE →](COMPLETE_GUIDE.md)**
 
 ---
