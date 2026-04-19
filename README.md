@@ -1,6 +1,6 @@
 
 
-# 🌿 🚀 Cloud-native microservices platform deployed on Azure Kubernetes Service (AKS) using Terraform, GitOps (ArgoCD), and CI/CD pipelines.
+# 🌿 🚀 Cloud-native microservices Plant of paradise platform deployed on Azure Kubernetes Service (AKS) using Terraform, GitOps (ArgoCD), and CI/CD pipelines.
 
 This project demonstrates end-to-end DevOps architecture including infrastructure provisioning, containerization, automated deployment, and observability.
 
